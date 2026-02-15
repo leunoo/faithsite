@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>faith.fun | #1 Unlock All Tool</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        faith: '#8B5CF6',
+                        faithpurple: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+    </script>
+</head>
+
+<body>
+    <div id="vanta-bg"></div>
+    <div id="root"></div>
+    <div id="custom-cursor">
+        <div class="cursor-plus"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- We keep the React app in a separate block but it now uses externalized components where possible -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const DISCORD_LINK = "https://discord.gg/EKfMjc63pk";
+        const DOWNLOAD_LINK = "https://work.ink/1YiU/faithice-external-1st-step";
+        const PREVIEW_YOUTUBE_ID = "pk-nD9w_4VM";
+        const faith_ICON_URL = "https://i.postimg.cc/MKwM9mm1/faith-LESSFAT.png";
+
+        const BrowserTab = ({ id, label, icon, isActive, onClick }) => (
+            <button
+                onClick={() => onClick(id)}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 relative ${isActive
+                    ? 'bg-[#18181b] text-faithpurple rounded-t-lg border-x border-t border-zinc-800'
+                    : 'text-zinc-500 hover:text-faithpurple'
+                    }`}
+            >
+                <i className={`fa-solid ${icon} text-xs`}></i>
+                <span>{label}</span>
+                {isActive && <div className="absolute -bottom-px left-0 right-0 h-px bg-[#18181b] z-10" />}
+            </button>
+        );
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('home');
+
+            useEffect(() => {
+                const cursor = document.getElementById('custom-cursor');
+                const moveCursor = (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                };
+                window.addEventListener('mousemove', moveCursor);
+                return () => window.removeEventListener('mousemove', moveCursor);
+            }, []);
+
+            return (
+                <div className="min-h-screen relative flex flex-col">
+                    <main className="px-6 pt-16 pb-20 relative flex-1">
+                        <div className="w-full max-w-6xl mx-auto mt-8 mb-20 bg-[#09090b]/80 backdrop-blur-md rounded-xl border border-zinc-800 shadow-2xl overflow-hidden flex flex-col">
+                            <div className="bg-[#0c0c0e]/90 border-b border-zinc-800 px-4 pt-3 flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex gap-2 mr-4">
+                                        <div className="w-3 h-3 rounded-full bg-zinc-800" />
+                                        <div className="w-3 h-3 rounded-full bg-zinc-800" />
+                                        <div className="w-3 h-3 rounded-full bg-zinc-800" />
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <BrowserTab id="home" label="Home" icon="fa-house" isActive={activeTab === 'home'} onClick={setActiveTab} />
+                                        <BrowserTab id="showcase" label="Showcase" icon="fa-display" isActive={activeTab === 'showcase'} onClick={setActiveTab} />
+                                    </div>
+                                </div>
+                                <div className="pb-3">
+                                    <a href="/login.html" className="text-zinc-500 hover:text-faith text-xs mr-4 transition-colors">Admin Login</a>
+                                    <a href={DISCORD_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-faith/10 hover:bg-faith/20 text-faith px-3 py-1.5 rounded-md text-xs font-semibold transition-colors border border-faith/20">
+                                        <i className="fa-brands fa-discord"></i>
+                                        <span>Join Community</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="bg-[#18181b]/90 px-4 py-2 border-b border-zinc-800 flex items-center gap-3">
+                                <div className="flex gap-2 text-zinc-600 text-xs">
+                                    <i className="fa-solid fa-arrow-left cursor-pointer hover:text-zinc-400"></i>
+                                    <i className="fa-solid fa-arrow-right cursor-pointer hover:text-zinc-400"></i>
+                                    <i className="fa-solid fa-rotate-right cursor-pointer hover:text-zinc-400 ml-1"></i>
+                                </div>
+                                <div className="flex-1 bg-zinc-900/50 rounded-md py-1 px-3 text-xs text-zinc-500 font-mono flex items-center gap-2 border border-zinc-800">
+                                    <i className="fa-solid fa-lock text-[10px] text-faith"></i>
+                                    <span>faith.fun/{activeTab}</span>
+                                </div>
+                            </div>
+
+                            <div className="p-8 h-full min-h-[600px] bg-transparent relative">
+                                {activeTab === 'home' && (
+                                    <div className="space-y-12 pb-16 animate-in">
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                                            <div className="space-y-6">
+                                                <div className="flex items-start gap-4">
+                                                    <h2 className="text-3xl font-bold text-white leading-tight">
+                                                        faith.fun <br />
+                                                        <span className="text-faith">#1 Unlock All Tool</span>
+                                                    </h2>
+                                                </div>
+                                                <p className="text-zinc-400 leading-relaxed">
+                                                    Unlock every cosmetic, profile, and feature instantly. Faith.fun gives you the edge to stand out and stay ahead—effortlessly.
+                                                </p>
+                                                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                                    <a href={DISCORD_LINK} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-zinc-900/50 text-zinc-300 font-bold rounded-lg border border-zinc-800 hover:border-zinc-700 transition-colors text-center inline-block">Join Discord</a>
+                                                </div>
+                                            </div>
+                                            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-zinc-800 shadow-2xl bg-zinc-900/40 group">
+                                                <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${PREVIEW_YOUTUBE_ID}?autoplay=0&controls=1&rel=0`} frameBorder="0" allowFullScreen></iframe>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-[#0c0c0e]/60 border border-zinc-800/50 rounded-lg overflow-hidden flex flex-col">
+                                            <div className="px-5 py-3 border-b border-zinc-800/50 bg-zinc-900/20 flex items-center justify-between">
+                                                <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-[0.2em]">Changelog</span>
+                                            </div>
+                                            <div className="p-6 space-y-3 font-mono">
+                                                <div className="space-y-2 text-zinc-300 text-xs">
+                                                    <div className="mb-2">
+                                                        <span className="font-bold text-faith">V1.3 - THE DASHBOARD UPDATE</span>
+                                                    </div>
+                                                    <div className="mb-1">
+                                                        <span className="font-bold text-faith">+ New Key System</span><br />
+                                                        <span className="ml-4">• Keys are now validated via our secure dashboard<br />
+                                                            • Highspeed Vercel backend integration<br />
+                                                            • Roblox username binding for maximum security</span>
+                                                    </div>
+                                                    <div className="mb-1">
+                                                        <span className="font-bold text-faith">+ Modernized UI</span><br />
+                                                        <span className="ml-4">• Externalized styles and scripts<br />
+                                                            • Smoother animations and glassmorphism</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'showcase' && (
+                                    <div className="space-y-8 animate-in text-center py-10">
+                                        <h3 className="text-3xl font-bold text-white mb-8 uppercase tracking-widest">Community Showcase</h3>
+                                        <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl bg-zinc-950">
+                                            <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${PREVIEW_YOUTUBE_ID}?autoplay=0&controls=1&rel=0`} frameBorder="0" allowFullScreen></iframe>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
