@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Faith.fun</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--zinc-400);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid var(--zinc-800);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: rgba(139, 92, 246, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-yes {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .status-no {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .lua-box {
+            background: #000;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            border: 1px solid var(--zinc-800);
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--zinc-800);
+            font-size: 10px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="vanta-bg"></div>
+    <div id="custom-cursor">
+        <div class="cursor-plus"></div>
+    </div>
+
+    <nav
+        class="relative z-20 border-b border-zinc-800 bg-[#09090b]/80 backdrop-blur-md px-10 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-bold">faith.fun <span class="text-[#8B5CF6]">admin</span></span>
+        </div>
+        <div class="flex gap-4">
+            <a href="/index.html" class="text-zinc-400 hover:text-white text-sm">Site Home</a>
+            <button onclick="Auth.logout()" class="text-red-400 hover:text-red-300 text-sm">Logout</button>
+        </div>
+    </nav>
+
+    <main class="relative z-10 p-10 max-w-6xl mx-auto space-y-10 animate-in">
+        <!-- Key Generator Section -->
+        <div class="glass-panel p-8">
+            <h2 class="text-lg font-bold mb-4">Generate New Key</h2>
+            <div class="flex gap-4">
+                <input type="text" id="newPlayername" placeholder="Roblox Username" class="input-field max-w-xs">
+                <button onclick="Keys.generate()" class="btn-primary">Generate FAITH-XXXXXXXX Key</button>
+            </div>
+        </div>
+
+        <!-- Keys Table Section -->
+        <div class="glass-panel p-8">
+            <h2 class="text-lg font-bold mb-4">Active System Keys</h2>
+            <div class="overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key String</th>
+                            <th>Roblox Username</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keysTableBody">
+                        <!-- Keys will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Lua Snippet Section -->
+        <div class="glass-panel p-8">
+            <h2 class="text-lg font-bold mb-4">Lua Integration</h2>
+            <p class="text-zinc-400 text-sm mb-4">Paste this into your script to validate keys against this dashboard.
+            </p>
+            <div class="lua-box">
+                <button class="copy-btn" onclick="copyLua()">Copy</button>
+                <pre id="luaSnippet">
+local HttpService = game:GetService("HttpService")
+local player = game.Players.LocalPlayer
+
+local function validateKey(userKey)
+    local data = {
+        key = userKey,
+        playername = player.Name
+    }
+    
+    local success, response = pcall(function()
+        return HttpService:PostAsync(
+            "https://realfaith.vercel.app/api/validate-key",
+            HttpService:JSONEncode(data),
+            Enum.HttpContentType.ApplicationJson
+        )
+    end)
+    
+    if success then
+        local result = HttpService:JSONDecode(response)
+        if result.valid then
+            print("Key Validated!")
+            return true
+        end
+    end
+    print("Invalid Key or Player")
+    return false
+end
+
+-- Example Usage:
+-- if validateKey("FAITH-12345678") then ... end
+                </pre>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const Keys = {
+            async load() {
+                const res = await fetch('/api/keys');
+                const keys = await res.json();
+                const tbody = document.getElementById('keysTableBody');
+                tbody.innerHTML = keys.map(k => `
+                    <tr>
+                        <td class="font-mono text-[#8B5CF6]">${k.key}</td>
+                        <td>
+                            <input type="text" value="${k.playername}" class="bg-transparent border-b border-zinc-800 focus:outline-none" onblur="Keys.update('${k.key}', { newPlayername: this.value })">
+                        </td>
+                        <td>
+                            <span class="status-badge ${k.active === 'yes' ? 'status-yes' : 'status-no'}" onclick="Keys.toggle('${k.key}', '${k.active}')" style="cursor: pointer">
+                                ${k.active === 'yes' ? 'Active' : 'Disabled'}
+                            </span>
+                        </td>
+                        <td class="text-zinc-500 text-xs">${new Date(k.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button onclick="Keys.delete('${k.key}')" class="text-zinc-500 hover:text-red-500 transition-colors">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            },
+
+            async generate() {
+                const playername = document.getElementById('newPlayername').value;
+                await fetch('/api/keys', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ playername })
+                });
+                document.getElementById('newPlayername').value = '';
+                this.load();
+            },
+
+            async update(key, data) {
+                await fetch('/api/keys', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, ...data })
+                });
+                this.load();
+            },
+
+            async toggle(key, currentStatus) {
+                const active = currentStatus === 'yes' ? 'no' : 'yes';
+                await this.update(key, { active });
+            },
+
+            async delete(keyToDelete) {
+                if (!confirm('Are you sure you want to delete this key?')) return;
+                await fetch('/api/keys', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyToDelete })
+                });
+                this.load();
+            }
+        };
+
+        function copyLua() {
+            const snippet = document.getElementById('luaSnippet').innerText;
+            navigator.clipboard.writeText(snippet);
+            alert('Lua snippet copied to clipboard!');
+        }
+
+        // Initialize
+        Keys.load();
+    </script>
+</body>
+
+</html>
